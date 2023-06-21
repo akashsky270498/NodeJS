@@ -29,4 +29,23 @@ const upload = multer({
     limits: { filesize: 1024 * 1024 * 100 }
 })
 
-module.exports = upload;
+const imgToText = (req, res) => {
+    res.status(200).send(req.file);
+    const tesseract = require("node-tesseract-ocr");
+
+    const config = {
+        lang: 'eng',
+        oem: 1,
+        psm: 3
+    };
+
+    tesseract.recognize(req.file.path, config)
+        .then((text) => {
+            console.log("Result: ", text)
+        })
+        .catch((error) => {
+            console.log("Error: ", error.message);
+        })
+}
+
+module.exports = { upload, imgToText };

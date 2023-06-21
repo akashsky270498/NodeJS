@@ -2,10 +2,11 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.TOKEN_SECRET;
 
 exports.authUpdate = (req, res, next) => {
-    const token = req.cookies.jwt;
+    // const token = req.cookies.jwt;
+    const token = req.body.token || req.query.token || req.headers['auth'];
     if(token) {
         jwt.verify( token, jwtSecret, (err, decodedToken) => {
-            (err) ? res.status(401).json({ message : "Not Authorized"}) : (decodedToken.role !== "admin" && decodedToken.role !== "mentor") ? res.status(401).json({ message : "User Not Authorized"}) : next(); 
+            (err) ? res.status(401).json({ message : "Not Authorized! Invalid Token"}) : (decodedToken.role !== "admin" && decodedToken.role !== "mentor") ? res.status(401).json({ message : "User Not Authorized"}) : next(); 
         })
     }
     else {
@@ -14,10 +15,10 @@ exports.authUpdate = (req, res, next) => {
 }
 
 exports.authUsers = (req, res, next) => {
-    const token = req.cookies.jwt;
+    const token = req.body.token || req.query.token || req.headers['auth'];
     if(token) {
         jwt.verify( token, jwtSecret, (err, decodedToken) => {
-            (err) ? res.status(401).json({ message : "Not Authorized"}) : (decodedToken.role !== "mentor" && decodedToken.role !== "teacher" && decodedToken.role !== "admin") ? res.status(401).json({ message : "User Not Authorized"}) : next(); 
+            (err) ? res.status(401).json({ message : "Not Authorized! Invalid Token"}) : (decodedToken.role !== "mentor" && decodedToken.role !== "teacher" && decodedToken.role !== "admin") ? res.status(401).json({ message : "User Not Authorized"}) : next(); 
         })
     }
     else {
@@ -26,10 +27,10 @@ exports.authUsers = (req, res, next) => {
 }
 
 exports.authDelete = (req, res, next) => {
-    const token = req.cookies.jwt;
+    const token = req.body.token || req.query.token || req.headers['auth'];
     if(token) {
         jwt.verify( token, jwtSecret, (err, decodedToken) => {
-            (err) ? res.status(401).json({ message : "Not Authorized"}) : (decodedToken.role !== "admin") ? res.status(401).json({ message : "User Not Authorized"}) : next(); 
+            (err) ? res.status(401).json({ message : "Not Authorized! Invalid Token"}) : (decodedToken.role !== "admin") ? res.status(401).json({ message : "User Not Authorized"}) : next(); 
         })
     }
     else {

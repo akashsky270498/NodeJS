@@ -1,0 +1,100 @@
+<!-- Generate orderId onLoad-->
+<h1>Welcome to Tea Factory!</h1>
+<h4>Buy Ooty Green Tea</h4>
+<img src="https://images.pexels.com/photos/1417945/pexels-photo-1417945.jpeg" width=400>
+
+<p>Rejuvenate your senses with green tea grown on the <br> foothills of the Nilgiris!</p>
+<h4>INR 399 for 500 gm</h4>
+
+<button id="rzp-button1">Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+    var orderId;
+
+    $("button").hide();
+
+    $(document).ready(function () {
+        var settings = {
+            "url": "/create/orderId",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                "amount": "39900"
+            }),
+        };
+
+        //creates new orderId everytime
+        $.ajax(settings).done(function (response) {
+
+            orderId = response.orderId;
+            console.log(orderId);
+            $("button").show();
+        });
+    });
+    document.getElementById('rzp-button1').onclick = function (e) {
+        var options = {
+            // Existing options...
+            "key": "rzp_test_FzdqTTQAEwZfEH", // Enter the Key ID generated from the Dashboard
+            "amount": "39900", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Tea Factory",
+            "description": "Buy Green Tea",
+            "image": "https://example.com/your_logo",
+            "order_id": orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature)
+
+                var settings = {
+                    "url": "/api/payment/verify",
+                    "method": "POST",
+                    "timeout": 0,
+                    "headers": {
+                        "Content-Type": "application/json"
+                    },
+                    "data": JSON.stringify({ response }),
+                }
+
+                $.ajax(settings).done(function (response) {
+
+                    alert(JSON.stringify(response));
+                });
+            },
+            "customer": {
+                "name": "Gaurav Kumar",
+                "contact": "9999999998",
+                "email": "gaurav.kumar@example.com"
+            },
+            "theme": {
+                "color": "#99cc33"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response) {
+            // Existing error handling code...
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+
+        // Open the Razorpay payment window
+        var openedWindow = rzp1.open();
+        if (!openedWindow) {
+            // Handle the case where the pop-up window is blocked
+            alert('Pop-up window blocked. Please disable the pop-up blocker and try again.');
+        }
+
+        e.preventDefault();
+    }
+
+</script>

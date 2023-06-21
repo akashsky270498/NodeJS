@@ -3,7 +3,7 @@ const { register, login, updateUserById, deleteUserById, getAllUsers, getUserByI
 const { authUpdate, authUsers, authDelete } = require("../middlewares/auth");
 const passport = require("passport");
 const userController = require("../controllers/userController")
-const verify = require('../jwt/verify');
+
 
 //SWAGGER_Register
 /**
