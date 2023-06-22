@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { register, login, updateUserById, deleteUserById, getAllUsers, getUserById, otpCheck, getAllStudents, resetPassword } = require("../controllers/userController");
+const { register, login, updateUserById, deleteUserById, getAllUsers, getUserById, otpCheck, getAllStudents, changePassword } = require("../controllers/userController");
 const { authUpdate, authUsers, authDelete } = require("../middlewares/auth");
 const passport = require("passport");
 const userController = require("../controllers/userController")
@@ -245,7 +245,7 @@ router.route("/update/:_id").put(authUpdate, updateUserById);
    *       401:
    *         description: Unauthorized....
 */
-router.route('/reset-password/:_id').put(resetPassword);
+router.route('/change-password/:_id').put(changePassword);
 
 
 /**

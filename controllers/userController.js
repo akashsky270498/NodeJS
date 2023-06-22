@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
 
         const saveUser = await user.save();
         res.status(200).json({
-            message: "new User Created Successfully.",
+            message: "User Created Successfully.",
             user
         });
 
@@ -126,7 +126,7 @@ exports.deleteUserById = async (req, res) => {
     await User.findById(req.params._id)
         .then(user => user.deleteOne())
         .then(user =>
-            res.status(201).json({ message: "User successfully deleted", user })
+            res.status(201).json({ message: "User Deleted Successfully.", user })
         )
         .catch(error =>
             res
@@ -140,7 +140,7 @@ exports.otpCheck = async (req, res) => {
     if (/^\d{4}$/.test(otp)) {
         res.status(200).json({ message: "Success" });
     } else {
-        res.status(400).json({ message: "Incorrect OTP" });
+        res.status(200).json({ message: "Incorrect OTP" });
     }
 };
 
@@ -155,7 +155,7 @@ exports.getAllStudents = async (req, res) => {
     }
 };
 
-exports.resetPassword = async (req, res) => {
+exports.changePassword = async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.params._id);
         if (!user) {
