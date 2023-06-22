@@ -16,7 +16,7 @@ const { search } = require("../controllers/searchController");
    * /api/auth/search/{key}:
    *   get:
    *     summary: Get User Search Key
-   *     tags: [User]
+   *     tags: [Search]
    *     produces:
    *       - application/json
    *     security:
